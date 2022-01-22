@@ -1,1 +1,34 @@
+#Reference: https://towardsdatascience.com/building-an-ann-with-tensorflow-ec9652a7ddd4
+
+import tensorflow as tf
+from tensorflow.keras.datasets import fashion_mnist
+
+#Load data
+(X_train, y_train), (X_test, y_test) = fashion_mnist.load_data()
+
+#Normalization
+X_train = X_train/255.0
+X_test = X_test/255.0
+
+#Resizing
+X_train = X_train.reshape(-1, 28*28)
+X_test = X_test.reshape(-1, 28*28)
+
+#ANN model
+#Building the model
+model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Dense(units = 30, activation = 'relu', input_shape = (784,)))
+model.add(tf.keras.layers.Dropout(0.2))
+model.add(tf.keras.layers.Dense(units = 10, activation = 'softmax'))
+
+#Compiling the model
+model.compile(optimizer = 'adam',
+              loss = 'sparse_categorical_crossentropy',
+              metrics = ['sparse_categorical_accuracy'])
+
+#Training the model
+model.fit(X_train, y_train, epochs =5)
+
+#Evaluating the model
+test_loss, test_accuracy = model.evaluate(X_test, y_test)
 
